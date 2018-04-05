@@ -10,6 +10,8 @@ RISC_Machine *RISC_Init(unsigned int memory_size)
     this_machine->mem = memory;
     this_machine->mem_size = memory_size;
 
+    this_machine->regs = (RISC_MachineRegisters){0}; // Initialize registers to 0
+
     return this_machine;
 }
 
@@ -25,7 +27,7 @@ int RISC_LoadBinMem(FILE *fp, RISC_Machine *machine, uint16_t memory_addr, uint1
     if((memory_addr + count) >= machine->mem_size)
         return 0; // ERROR: May not exceed total RAM area. (early return)
 
-    if( (machine->mem[510] == 0x4D && machine->mem[511] == 46) )
+    if( (machine->mem[510] == 0x4D && machine->mem[511] == 0x46) )
         return 0; // ERROR: May not intrude secure boot area. (early return)
 
     fread(machine->mem, 1, count, fp);

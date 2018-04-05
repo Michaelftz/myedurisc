@@ -6,11 +6,11 @@
 #include <time.h>
 
 /* CONSTANT DEFINITIONS */
-#define _RISC_RAM_SIZE 65536
+#define _RISC_RAM_BYTES 65536
 #define _RISC_MENU_WELCOME "MyEduRISC Alpha \nCopyright (C) 2018 Michael Fitzgerald \n\n\tThis program comes with ABSOLUTELY NO WARRANTY. \n\tThis is free software, and you are welcome to redistribute it \n\tunder certain conditions. Type `edurisc --license' for details."
 #define _RISC_MENU_LICENSE "MyEduRISC - a virtual machine for the educational programming environment EduRISC \nCopyright (C) 2018 Michael Fitzgerald \n\nThis program is free software: you can redistribute it and/or modify \nit under the terms of the GNU General Public License as published by \nthe Free Software Foundation, either version 3 of the License, or \n(at your option) any later version. \n\nThis program is distributed in the hope that it will be useful, \nbut WITHOUT ANY WARRANTY; without even the implied warranty of \nMERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the \nGNU General Public License for more details. \n\nYou should have received a copy of the GNU General Public License \nalong with this program.  If not, see <https://www.gnu.org/licenses/>."
 #define _RISC_MENU_USAGE "USAGE: \tedurisc path_to_rom_file [-opts] \nor \tedurisc [--override] \nType 'edurisc --help' for more documentation."
-#define _RISC_MENU_VERSION "0.01 Alpha 2017.01.18.A"
+#define _RISC_MENU_VERSION "0.01 (Pre-Alpha) 1812A"
 
 #define _RISC_IPS 500000
 
@@ -28,9 +28,36 @@ typedef uint16_t RISC_REG16;
 //extern uint32_t RISC_GLOBAL_FLAGS;
 typedef struct
 {
+    // 8-bit/16-bit hybrid
+    uint16_t A; // accumulator
+    uint16_t X; // general-purpose
+    uint16_t Y; // general-purpose
+
+    // 16-bit (pointers and flags)
+    uint16_t DI; // destination index (general-purpose pointer)
+    uint16_t SI; // source index (general-purpose pointer)
+    uint16_t IP; // instruction pointer
+    uint16_t BP; // base pointer (stack base)
+    uint16_t SP; // stack pointer (current stack position)
+    uint16_t CF; // CPU flags
+
+    // 8-bit (memory segmentation)
+    uint8_t CSEG;
+    uint8_t DSEG;
+    uint8_t SSEG;
+} RISC_MachineRegisters;
+
+typedef struct
+{
     uint8_t *mem;
-    unsigned int mem_size;
+    unsigned int mem_size; //kb
+
+    RISC_MachineRegisters regs;
+
+    uint32_t options;
 } RISC_Machine; // RISC_Machine struct/pointer/etc.
+
+
 
 typedef void (*RISC_FunctionPointer)();
 

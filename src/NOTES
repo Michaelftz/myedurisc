@@ -1,6 +1,8 @@
 CPU Specifications:
     8/16-bit hybrid
     10 MHz clock (500,000 IPS?)
+    Little-endian
+    LSB 0 bit order (7-6-5-4-3-2-1-0)
 
 ~~~ RISC_Machine ~~~
     The struct RISC_Machine contains information regarding a specific instance

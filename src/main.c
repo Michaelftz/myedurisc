@@ -1,4 +1,6 @@
-// VERSION SYSTEM 1: Major.2DigitMinor VersionBlock YYYY.MM.DD.LETTER
+// VERSION SYSTEM: Version <Major>.<2DigitMinor> (<VersionBlock>) [Build <YYWWX>]
+// VERSION EXAMPLE: Version 0.01 (Pre-Alpha) [Build 1814A]
+
 
 /* INCLUDE HEADERS */
 #include "edurisc.h"
@@ -29,7 +31,7 @@ int main(int argc, char **argv)
     }
 
     /* INITIALIZE VIRTUAL MACHINE */
-    RISC_Machine *machine = RISC_Init(_RISC_RAM_SIZE);
+    RISC_Machine *machine = RISC_Init(_RISC_RAM_BYTES);
 
     /* OPEN ROM FILE */
     if( !(RISC_ROM = fopen(argv[1], "rb")) )
@@ -46,6 +48,8 @@ int main(int argc, char **argv)
     }
 
     printf("MEMORY: %u bytes\nFIRST BYTE: 0x%X\n", machine->mem_size, machine->mem[0x00]);
+
+    printf("A: %u\nX: %u\nY: %u\nCSEG: %u\nDSEG: %u\nSSEG: %u\n", machine->regs.A, machine->regs.X, machine->regs.Y, machine->regs.CSEG, machine->regs.DSEG, machine->regs.SSEG);
 
     /* CLOSE FILE AND FREE MEMORY */
     RISC_Quit(machine);
