@@ -1,2 +1,2 @@
 edurisc: $(wildcard src/*.c)
-	$(CC) $? -o bin/$@
+	$(CC) $? -g -o bin/$@
