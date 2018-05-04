@@ -25,6 +25,7 @@ typedef uint16_t RISC_REG16;
 //extern uint8_t RISC_RAM[_RISC_RAM_SIZE];
 
 /* ENGINE PROPERTIES */
+
 //extern uint32_t RISC_GLOBAL_FLAGS;
 typedef struct
 {
@@ -42,28 +43,31 @@ typedef struct
     uint16_t CF; // CPU flags
 
     // 8-bit (memory segmentation)
-    uint8_t CSEG;
-    uint8_t DSEG;
-    uint8_t SSEG;
-} RISC_MachineRegisters;
+    uint8_t CSEG; // code segment
+    uint8_t DSEG; // data segment
+    uint8_t SSEG; // stack segment
+} RISC_MachineRegs;
+
+typedef void (*RISC_FunctionPointer)(void *);
 
 typedef struct
 {
     uint8_t *mem;
     unsigned int mem_size; //kb
 
-    RISC_MachineRegisters regs;
+    RISC_MachineRegs regs;
+    RISC_FunctionPointer *ops;
 
     uint32_t options;
 } RISC_Machine; // RISC_Machine struct/pointer/etc.
 
-
-
-typedef void (*RISC_FunctionPointer)();
-
 extern RISC_Machine *RISC_Init(unsigned int memory_size);
 extern void RISC_Quit(RISC_Machine *machine);
 extern int RISC_LoadBinMem(FILE *fp, RISC_Machine *machine, uint16_t memory_addr, uint16_t count);
+extern void RISC_ResetOps(RISC_Machine *machine);
+extern void RISC_MachineStart(RISC_Machine *machine);
+extern void RISC_MachineIter(RISC_Machine *machine);
+extern void RISC_MachineStop(RISC_Machine *machine);
 
 //extern int RISC_CPU();
 

@@ -9,8 +9,11 @@ RISC_Machine *RISC_Init(unsigned int memory_size)
 
     this_machine->mem = memory;
     this_machine->mem_size = memory_size;
+    this_machine->regs = (RISC_MachineRegs){0}; // Initialize registers to 0
+    this_machine->ops = NULL;
+    this_machine->options = 0;
 
-    this_machine->regs = (RISC_MachineRegisters){0}; // Initialize registers to 0
+    RISC_ResetOps(this_machine);
 
     return this_machine;
 }
@@ -19,6 +22,32 @@ void RISC_Quit(RISC_Machine *machine) //CHANGE TO INT! - error options
 {
     free(machine->mem);
     free(machine);
+    return;
+}
+
+inline void RISC_MachineIter(RISC_Machine *machine)
+{
+    uint8_t this_inst = machine->mem[machine->regs.IP];
+    //printf("0x%p\n", machine->ops[this_inst]);
+    (machine->ops[this_inst])(machine);
+    machine->regs.IP++;
+    return;
+}
+
+void RISC_MachineStart(RISC_Machine *machine)
+{
+    while(!(machine->options & 0x01))
+    {
+        RISC_MachineIter(machine);
+    }
+
+    return;
+}
+
+void RISC_MachineStop(RISC_Machine *machine)
+{
+    free(machine->ops);
+
     return;
 }
 

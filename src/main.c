@@ -1,5 +1,5 @@
 // VERSION SYSTEM: Version <Major>.<2DigitMinor> (<VersionBlock>) [Build <YYWWX>]
-// VERSION EXAMPLE: Version 0.01 (Pre-Alpha) [Build 1814A]
+// VERSION EXAMPLE: Version 0.01 (Pre-Alpha) [Build 1818A]
 
 
 /* INCLUDE HEADERS */
@@ -48,6 +48,8 @@ int main(int argc, char **argv)
     }
 
     printf("MEMORY: %u bytes\nFIRST BYTE: 0x%X\n", machine->mem_size, machine->mem[0x00]);
+
+    RISC_MachineStart(machine);
 
     printf("A: %u\nX: %u\nY: %u\nCSEG: %u\nDSEG: %u\nSSEG: %u\n", machine->regs.A, machine->regs.X, machine->regs.Y, machine->regs.CSEG, machine->regs.DSEG, machine->regs.SSEG);
 
