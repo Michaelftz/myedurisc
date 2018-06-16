@@ -8,7 +8,7 @@ void RISC_OP_NOP(RISC_Machine *machine)
     return;
 }
 
-/* HLT - halts the program, by setting global flag bit 7 to true */
+/* HLT - halts the program, by setting flag bit 0 to true */
 void RISC_OP_HLT(RISC_Machine *machine)
 {
     machine->options |= 0x01;
@@ -34,7 +34,7 @@ void RISC_OP_AND_imm8(RISC_Machine *machine)
     machine->regs.A &= ti;
     return;
 }
-void RISC_OP_AND_X16(RISC_Machine *machine)
+/*void RISC_OP_AND_X16(RISC_Machine *machine)
 {
     machine->regs.A &= machine->regs.X;
     return;
@@ -50,17 +50,57 @@ void RISC_OP_AND_imm16(RISC_Machine *machine)
     uint16_t low = machine->mem[++machine->regs.IP];
     machine->regs.A &= (high | low);
     return;
+}*/
+
+/* OR - bitwise OR, does not touch unused bits */
+void RISC_OP_OR_X8(RISC_Machine *machine)
+{
+    uint16_t tX = machine->regs.X & 0x00FF;
+    machine->regs.A |= tX;
+    return;
 }
+void RISC_OP_OR_Y8(RISC_Machine *machine)
+{
+    uint16_t tY = machine->regs.Y & 0x00FF;
+    machine->regs.A |= tY;
+    return;
+}
+void RISC_OP_OR_imm8(RISC_Machine *machine)
+{
+    uint16_t ti = machine->mem[++machine->regs.IP] & 0x00FF;
+    machine->regs.A |= ti;
+    return;
+}
+/*void RISC_OP_OR_X16(RISC_Machine *machine)
+{
+    machine->regs.A |= machine->regs.X;
+    return;
+}
+void RISC_OP_OR_Y16(RISC_Machine *machine)
+{
+    machine->regs.A |= machine->regs.Y;
+    return;
+}
+void RISC_OP_OR_imm16(RISC_Machine *machine)
+{
+    uint16_t high = machine->mem[++machine->regs.IP] << 8;
+    uint16_t low = machine->mem[++machine->regs.IP];
+    machine->regs.A |= (high | low);
+    return;
+}*/
 
-
-/* ADD - arithmetic add operation */
+/* ADD - arithmetic addition operation */
 void RISC_OP_ADD_X8(RISC_Machine *machine)
 {
-    uint16_t tX = machine->regs.X & 0x00FF; // clear high bits
-    uint16_t tA = machine->regs.A + tX; // adds the prepared values
-    if( (machine->regs.A & 0xFF00) != (tA & 0xFF00) ) // checks for overflow
-        machine->regs.CF |= 0x03;
-    machine->regs.A = tA;
+    uint16_t tA = machine->regs.A & 0x00FF; // clear high bits
+    uint16_t tX = machine->regs.X & 0x00FF;
+    tA += tX;
+    if(tA > 0xFF) // checks for overflow
+    {
+        machine->regs.CF |= 0x04;
+    }
+    machine->regs.A &= 0xFF00;
+    machine->regs.A |= (tA & 0x00FF);
     return;
 }
 void RISC_OP_ADD_Y8(RISC_Machine *machine)
@@ -68,21 +108,20 @@ void RISC_OP_ADD_Y8(RISC_Machine *machine)
     uint16_t tY = machine->regs.Y & 0x00FF; // clear high bits
     uint16_t tA = machine->regs.A + tY; // adds the prepared values
     if( (machine->regs.A & 0xFF00) != (tA & 0xFF00) ) // checks for overflow
-        machine->regs.CF |= 0x03;
+        machine->regs.CF |= 0x04;
     machine->regs.A = tA;
     return;
 }
 void RISC_OP_ADD_imm8(RISC_Machine *machine)
 {
-    printf("%d\n", machine->regs.IP);
     uint16_t ti = machine->mem[++machine->regs.IP] & 0x00FF;
     uint16_t tA = machine->regs.A + ti;
     if( (machine->regs.A & 0xFF00) != (tA & 0xFF00) ) // checks for overflow
-        machine->regs.CF |= 0x03;
+        machine->regs.CF |= 0x04;
     machine->regs.A = tA;
     return;
 }
-void RISC_OP_ADD_X16(RISC_Machine *machine)
+/*void RISC_OP_ADD_X16(RISC_Machine *machine)
 {
     machine->regs.A += machine->regs.X;
     return;
@@ -98,12 +137,56 @@ void RISC_OP_ADD_imm16(RISC_Machine *machine)
     uint16_t low = machine->mem[++machine->regs.IP];
     machine->regs.A += (high | low);
     return;
-}
+}*/
 
+/* SUB - arithmetic subtraction operation */
+void RISC_OP_SUB_X8(RISC_Machine *machine)
+{
+    uint16_t tX = machine->regs.X & 0x00FF; // clear high bits
+    uint16_t tA = machine->regs.A - tX; // adds the prepared values
+    if( (machine->regs.A & 0xFF00) != (tA & 0xFF00) ) // checks for overflow
+        machine->regs.CF |= 0x04;
+    machine->regs.A = tA;
+    return;
+}
+void RISC_OP_SUB_Y8(RISC_Machine *machine)
+{
+    uint16_t tY = machine->regs.Y & 0x00FF; // clear high bits
+    uint16_t tA = machine->regs.A - tY; // adds the prepared values
+    if( (machine->regs.A & 0xFF00) != (tA & 0xFF00) ) // checks for overflow
+        machine->regs.CF |= 0x04;
+    machine->regs.A = tA;
+    return;
+}
+void RISC_OP_SUB_imm8(RISC_Machine *machine)
+{
+    uint16_t ti = machine->mem[++machine->regs.IP] & 0x00FF;
+    uint16_t tA = machine->regs.A - ti;
+    if( (machine->regs.A & 0xFF00) != (tA & 0xFF00) ) // checks for overflow
+        machine->regs.CF |= 0x04;
+    machine->regs.A = tA;
+    return;
+}
+/*void RISC_OP_SUB_X16(RISC_Machine *machine)
+{
+    machine->regs.A -= machine->regs.X;
+    return;
+}
+void RISC_OP_SUB_Y16(RISC_Machine *machine)
+{
+    machine->regs.A -= machine->regs.Y;
+    return;
+}
+void RISC_OP_SUB_imm16(RISC_Machine *machine)
+{
+    uint16_t high = machine->mem[++machine->regs.IP] << 8;
+    uint16_t low = machine->mem[++machine->regs.IP];
+    machine->regs.A -= (high | low);
+    return;
+}*/
 
 
 /* RISC: RESET OPS */
-
 void RISC_ResetOps(RISC_Machine *machine)
 {
     if(machine->ops != NULL)
@@ -133,14 +216,14 @@ void RISC_ResetOps(RISC_Machine *machine)
 	machine->ops[0x10] = &RISC_OP_AND_X8;
 	machine->ops[0x11] = &RISC_OP_AND_Y8;
 	machine->ops[0x12] = &RISC_OP_AND_imm8;
-	machine->ops[0x13] = &RISC_OP_AND_X16;
-	machine->ops[0x14] = &RISC_OP_AND_Y16;
-	machine->ops[0x15] = &RISC_OP_AND_imm16;
+	machine->ops[0x13] = &RISC_OP_NOP;
+	machine->ops[0x14] = &RISC_OP_NOP;
+	machine->ops[0x15] = &RISC_OP_NOP;
 	machine->ops[0x16] = &RISC_OP_NOP;
 	machine->ops[0x17] = &RISC_OP_NOP;
-	machine->ops[0x18] = &RISC_OP_NOP;
-	machine->ops[0x19] = &RISC_OP_NOP;
-	machine->ops[0x1A] = &RISC_OP_NOP;
+	machine->ops[0x18] = &RISC_OP_OR_X8;
+	machine->ops[0x19] = &RISC_OP_OR_Y8;
+	machine->ops[0x1A] = &RISC_OP_OR_imm8;
 	machine->ops[0x1B] = &RISC_OP_NOP;
 	machine->ops[0x1C] = &RISC_OP_NOP;
 	machine->ops[0x1D] = &RISC_OP_NOP;
@@ -181,14 +264,14 @@ void RISC_ResetOps(RISC_Machine *machine)
 	machine->ops[0x40] = &RISC_OP_ADD_X8;
 	machine->ops[0x41] = &RISC_OP_ADD_Y8;
 	machine->ops[0x42] = &RISC_OP_ADD_imm8;
-	machine->ops[0x43] = &RISC_OP_ADD_X16;
-	machine->ops[0x44] = &RISC_OP_ADD_Y16;
-	machine->ops[0x45] = &RISC_OP_ADD_imm16;
+	machine->ops[0x43] = &RISC_OP_NOP;
+	machine->ops[0x44] = &RISC_OP_NOP;
+	machine->ops[0x45] = &RISC_OP_NOP;
 	machine->ops[0x46] = &RISC_OP_NOP;
 	machine->ops[0x47] = &RISC_OP_NOP;
-	machine->ops[0x48] = &RISC_OP_NOP;
-	machine->ops[0x49] = &RISC_OP_NOP;
-	machine->ops[0x4A] = &RISC_OP_NOP;
+	machine->ops[0x48] = &RISC_OP_SUB_X8;
+	machine->ops[0x49] = &RISC_OP_SUB_Y8;
+	machine->ops[0x4A] = &RISC_OP_SUB_imm8;
 	machine->ops[0x4B] = &RISC_OP_NOP;
 	machine->ops[0x4C] = &RISC_OP_NOP;
 	machine->ops[0x4D] = &RISC_OP_NOP;

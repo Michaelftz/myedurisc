@@ -1,9 +1,12 @@
-/* INCLUDE HEADERS */
+/* INCLUDE STANDARD LIBRARY HEADERS */
 #include <stdio.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+
+/* INCLUDE EDURISC HEADERS */
+#include <er8/er8.h>
 
 /* CONSTANT DEFINITIONS */
 #define _RISC_RAM_BYTES 65536
@@ -27,26 +30,6 @@ typedef uint16_t RISC_REG16;
 /* ENGINE PROPERTIES */
 
 //extern uint32_t RISC_GLOBAL_FLAGS;
-typedef struct
-{
-    // 8-bit/16-bit hybrid
-    uint16_t A; // accumulator
-    uint16_t X; // general-purpose
-    uint16_t Y; // general-purpose
-
-    // 16-bit (pointers and flags)
-    uint16_t DI; // destination index (general-purpose pointer)
-    uint16_t SI; // source index (general-purpose pointer)
-    uint16_t IP; // instruction pointer
-    uint16_t BP; // base pointer (stack base)
-    uint16_t SP; // stack pointer (current stack position)
-    uint16_t CF; // CPU flags
-
-    // 8-bit (memory segmentation)
-    uint8_t CSEG; // code segment
-    uint8_t DSEG; // data segment
-    uint8_t SSEG; // stack segment
-} RISC_MachineRegs;
 
 typedef void (*RISC_FunctionPointer)(void *);
 
@@ -55,7 +38,7 @@ typedef struct
     uint8_t *mem;
     unsigned int mem_size; //kb
 
-    RISC_MachineRegs regs;
+    RISC_er8_MachineRegs regs;
     RISC_FunctionPointer *ops;
 
     uint32_t options;

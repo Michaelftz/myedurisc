@@ -11,3 +11,5 @@ CPU Specifications:
     etc.). In an ideal environment, functions and modules shall pass either
     copies of specific members/details of a struct instance (see docs or headers
     for more info) or a pointer to an entire instance.
+
+Each RISC_Machine structure contains multiple register structures, depending on the generation or extension.

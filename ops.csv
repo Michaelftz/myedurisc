@@ -10,7 +10,7 @@ Opcode,Instruction,Format,Description,,Registers
 0x08,,,,,BP - base pointer
 0x09,,,,,IP - inst. pointer
 0x0A,,,,,SP - stack pointer
-0x0B,,,,,CF - CPU flags
+0x0B,,,BITS: 7 6 5 4 3 2 1 0,,CF - CPU flags
 0x0C,,,,,
 0x0D,,,,,8-bit
 0x0E,,,,,CSEG - code seg.
