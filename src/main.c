@@ -51,7 +51,7 @@ int main(int argc, char **argv)
 
     RISC_MachineStart(machine);
 
-    printf("A: %u\nX: %u\nY: %u\nCSEG: %u\nDSEG: %u\nSSEG: %u\n", machine->regs.A, machine->regs.X, machine->regs.Y, machine->regs.CSEG, machine->regs.DSEG, machine->regs.SSEG);
+    printf("A: %u\nX: %u\nY: %u\n", machine->regs.A, machine->regs.X, machine->regs.Y);
 
     /* CLOSE FILE AND FREE MEMORY */
     RISC_Quit(machine);

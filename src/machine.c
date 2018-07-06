@@ -1,6 +1,6 @@
 #include "edurisc.h"
 
-RISC_Machine *RISC_Init(unsigned int memory_size)
+RISC_Machine *RISC_Init(size_t memory_size)
 {
     RISC_Machine *this_machine = malloc(sizeof(RISC_Machine)); // See docs on info for RISC_Machine
 
@@ -9,7 +9,7 @@ RISC_Machine *RISC_Init(unsigned int memory_size)
 
     this_machine->mem = memory;
     this_machine->mem_size = memory_size;
-    this_machine->regs = (RISC_er8_MachineRegs){0}; // Initialize registers to 0
+    this_machine->regs = (RISC_er8_Regs){0}; // Initialize registers to 0
     this_machine->ops = NULL;
     this_machine->options = 0;
 

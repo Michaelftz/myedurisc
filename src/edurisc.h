@@ -6,7 +6,7 @@
 #include <time.h>
 
 /* INCLUDE EDURISC HEADERS */
-#include <er8/er8.h>
+#include "er8/er8.h"
 
 /* CONSTANT DEFINITIONS */
 #define _RISC_RAM_BYTES 65536
@@ -38,13 +38,13 @@ typedef struct
     uint8_t *mem;
     unsigned int mem_size; //kb
 
-    RISC_er8_MachineRegs regs;
+    RISC_er8_Regs regs;
     RISC_FunctionPointer *ops;
 
     uint32_t options;
 } RISC_Machine; // RISC_Machine struct/pointer/etc.
 
-extern RISC_Machine *RISC_Init(unsigned int memory_size);
+extern RISC_Machine *RISC_Init(size_t memory_size);
 extern void RISC_Quit(RISC_Machine *machine);
 extern int RISC_LoadBinMem(FILE *fp, RISC_Machine *machine, uint16_t memory_addr, uint16_t count);
 extern void RISC_ResetOps(RISC_Machine *machine);

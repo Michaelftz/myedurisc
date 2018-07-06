@@ -19,4 +19,4 @@ typedef struct
     //uint8_t CSEG; // code segment
     //uint8_t DSEG; // data segment
     //uint8_t SSEG; // stack segment
-} RISC_er8_MachineRegs;
+} RISC_er8_Regs;
