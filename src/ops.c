@@ -114,6 +114,7 @@ void RISC_OP_ADD_Y8(RISC_Machine *machine)
 }
 void RISC_OP_ADD_imm8(RISC_Machine *machine)
 {
+    printf("%d\n", machine->regs.IP);
     uint16_t ti = machine->mem[++machine->regs.IP] & 0x00FF;
     uint16_t tA = machine->regs.A + ti;
     if( (machine->regs.A & 0xFF00) != (tA & 0xFF00) ) // checks for overflow
